@@ -118,12 +118,12 @@ app.get('/salas/:id', (req,res) =>{
 
 //post salas
 app.post('/salas', (req, res) =>{
+  const nuevaSala = req.body;
   const salaExistente = salas.find((sala) => sala.id === nuevaSala.id);
   if (salaExistente) {
     res.status(400).json({ mensaje: 'La sala con este ID ya existe' });
     return;
   }
-  const nuevaSala = req.body;
   if(!nuevaSala.id || !nuevaSala.nombre || !nuevaSala.capacidad || !nuevaSala.estado){
     res.status(400).json({mensaje: 'Todos los campos son requeridos'});
     return;

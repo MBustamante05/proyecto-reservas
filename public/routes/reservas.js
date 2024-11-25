@@ -6,15 +6,23 @@ const tableReservas = document.getElementById("table-reservas");
 const tableAllReserva = document.getElementById("table-all-reserva");
 
 let editingUser_R = null;
+
+function replaceStyle(element,original, end){
+  return element.classList.replace(original, end);
+}
 async function mostrarReservas(){
   try {
     const response = await fetch(API_URL_R);
     const reservas = await response.json();
     tableReservas.innerHTML = "";
+    if(reservas.length == 0){
+      replaceStyle(tableAllReserva,"d-block", "d-none" );
+      replaceStyle(reserveMessage, "d-none", "d-block");
+    }
     reservas.forEach((reserva) =>{
       const row = document.createElement("tr");
       row.innerHTML = `
-        <td>${reserva.id}</td>
+        <td scope="row">${reserva.id}</td>
         <td>${reserva.salaId}</td>
         <td>${reserva.nombre}</td>
         <td>${reserva.fechaInicio}</td>
@@ -58,9 +66,7 @@ async function cambiarEstado(idSala, nuevoEstado, table) {
     alert(`Error al cambiar el estado de la sala: ${error.message}`);
   }
 }
-function replaceStyle(element,original, end){
-  return element.classList.replace(original, end);
-}
+
 async function guardarReservas(e) {
   e.preventDefault();
   const id = document.getElementById("reserva-id").value,

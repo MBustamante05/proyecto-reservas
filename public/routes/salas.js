@@ -32,39 +32,40 @@ async function mostrarSalas(table) {
   const responseDispo = await fetch(`${API_URL}/disponibles`);
   const salasDisponibles = await responseDispo.json();
   if (table === tableSalas) {
-    table.innerHTML = ""; //Aquí hubo un cambio
+    table.innerHTML = ""; 
     salas.forEach((sala) => {
-      const row = document.createElement("tr"); //Aquí hubo un cambio
+      const row = document.createElement("tr"); 
       row.innerHTML = `
-          <td>${sala.id}</td>
+          <td scope="row">${sala.id}</td>
           <td>${sala.nombre}</td>
           <td>${sala.capacidad}</td>
           <td>${sala.estado}</td>
           <td>
             <button class="btn btn-warning" onclick=editarSala(${sala.id})>Editar</button>
             <button class="btn btn-danger" onclick=eliminarSala(${sala.id})>Eliminar</button>
-            <button id="btn-reserva" class="btn btn-success" ${sala.estado === "Inactiva" ? "disabled" : ""} onclick=reservar(${sala.id},"1")>Reservar</button>
+            <button id="btn-reserva" class="btn btn-success" ${sala.estado === "Inactiva" ? "disabled" : ""} onclick=reservar(${sala.id},"1")><a href="#reservas-form" class="text-white text-decoration-none">Reservar</a></button>
           </td>
         `;
-      table.appendChild(row); //Aquí hubo un cambio
+      table.appendChild(row); 
     });
   }else if(table === tableDispo){
-    table.innerHTML = ""; //Aquí hubo un cambio
+    table.innerHTML = ""; 
     salasDisponibles.forEach((sala) => {
-      const row = document.createElement("tr"); //Aquí hubo un cambio
+      const row = document.createElement("tr"); 
       row.innerHTML = `
           <td>${sala.id}</td>
           <td>${sala.nombre}</td>
           <td>${sala.capacidad}</td>
           <td>${sala.estado}</td>
           <td>
-            <button id="btn-reserva" class="btn btn-success" ${sala.estado === "Inactiva" ? "disabled" : ""} onclick=reservar(${sala.id},"2")>Reservar</button>
+            <button id="btn-reserva" class="btn btn-success" ${sala.estado === "Inactiva" ? "disabled" : ""} onclick=reservar(${sala.id},"2")><a href="#reservas-form" class="text-white text-decoration-none">Reservar</a></button>
           </td>
         `;
-      table.appendChild(row); //Aquí hubo un cambio
+      table.appendChild(row); 
     });
   }
 }
+
 async function reservar(id, table) {
   reservasForm_R.classList.replace("d-none", "d-block");
   document.getElementById("reserva-salaID").value = id;
@@ -114,8 +115,8 @@ async function guardarSalas(e) {
         body: JSON.stringify(sala),
       });
     }
-    await mostrarSalas(tableSalas);
-    await mostrarSalas(tableDispo);
+    mostrarSalas(tableSalas);
+    mostrarSalas(tableDispo);
     salasForm.reset();
   } catch (error) {
     alert("Error al cargar sala");
