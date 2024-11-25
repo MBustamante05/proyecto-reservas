@@ -13,11 +13,11 @@ let editingUser = null;
 async function reiniciarSalas() {
   try {
     
-    const response = await fetch(`${API_URL}/reiniciar`, { method: "POST" });
+    const response = await fetch(`http://localhost:3000/reiniciar`, { method: "POST" });
     console.log(response);
     
     if (!response.ok) throw new Error("No se pudo reiniciar las salas");
-    alert("Salas reiniciadas al estado inicial");
+    console.log("Salas reiniciadas al estado inicial");
     mostrarSalas(tableSalas);
     mostrarSalas(tableDispo);
   } catch (error) {
@@ -68,11 +68,7 @@ async function mostrarSalas(table) {
 async function reservar(id, table) {
   reservasForm_R.classList.replace("d-none", "d-block");
   document.getElementById("reserva-salaID").value = id;
-  if(table == "1"){
-    deshabilitarBoton(id, "1");
-  }else{
-    deshabilitarBoton(id, "2");
-  }
+  deshabilitarBoton(id, table);
 }
 function deshabilitarBoton(id, table) {
   const rowSelector = table === "1" ? "#table-salas" : "#table-dispo";
@@ -118,7 +114,8 @@ async function guardarSalas(e) {
         body: JSON.stringify(sala),
       });
     }
-    mostrarSalas(tableSalas);
+    await mostrarSalas(tableSalas);
+    await mostrarSalas(tableDispo);
     salasForm.reset();
   } catch (error) {
     alert("Error al cargar sala");
@@ -153,7 +150,8 @@ async function eliminarSala(id) {
       return;
     }
     alert("Sala eliminada correcamente");
-    mostrarSalas(tableSalas);
+    await mostrarSalas(tableSalas);
+    await mostrarSalas(tableDispo);
   } catch (error) {
     throw new Error(error.message);
   }

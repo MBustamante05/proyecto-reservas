@@ -13,7 +13,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(express.json());
-const reservas = [];
+let reservas = [];
 let salasDisponibles = [
   {id: 101, nombre: "Sala1", capacidad: 25, estado: "Activa"},
   {id: 102, nombre: "Sala2", capacidad: 50, estado: "Activa"},
@@ -153,11 +153,20 @@ app.delete('/salas/:id', (req,res)=>{
     return;
   }
   const salaEliminada = salas.splice(indice, 1);
-  res.json({mensaje: 'sala eliminada correctamente', sala: salaEliminada});
+
+  const indiceReserva = reservas.findIndex(reserva => reserva.salaId === idsala);
+  if (indiceReserva == -1) {
+    return res.status(404).json({mensaje: "No se encontró la reserva asociada a esta sala"});
+  }
+  reservas.splice(indiceReserva, 1);
+  res.json({
+    mensaje: 'Sala y su reserva asociada eliminadas correctamente',
+    sala: salaEliminada,
+  });
 });
 
 // REINICIAR SALAS
-app.post('/salas/reiniciar', (req,res) =>{
+app.post('/reiniciar', (req,res) =>{
   salasDisponibles = [
     {id: 101, nombre: "Sala1", capacidad: 25, estado: "Activa"},
     {id: 102, nombre: "Sala2", capacidad: 50, estado: "Activa"},
@@ -165,6 +174,7 @@ app.post('/salas/reiniciar', (req,res) =>{
     {id: 104, nombre: "Sala4", capacidad: 100, estado: "Activa"},
   ];
   salas = [];
+  reservas = [];
   res.status(200).send("Salas reiniciadas");
 })
 //LLAMAR AL PUERTO

@@ -153,5 +153,6 @@ async function eliminarReserva(id, table){
 }
 
 reservasForm.addEventListener("submit", guardarReservas);
-
-mostrarReservas();
+setInterval(() => {
+  mostrarReservas();
+}, 2000);
